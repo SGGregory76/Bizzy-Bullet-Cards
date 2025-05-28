@@ -1,0 +1,46 @@
+body {
+  margin: 0;
+  background: #111;
+  color: #999;
+  font-family: 'Segoe UI', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+}
+
+.card-container {
+  max-width: 400px;
+  margin-top: 20px;
+  position: relative;
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.stat-overlay {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 0.5rem;
+  font-size: 0.9rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  color: #fff;
+}
+
+.flip-button {
+  margin-top: 10px;
+}
+
+.card img {
+  width: 100%;
+  display: block;
+}
