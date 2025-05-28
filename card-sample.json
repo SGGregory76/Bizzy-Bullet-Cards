@@ -1,5 +1,4 @@
-<script>
-  const defaultCard = {
+
     "image": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjRJfVYist3EV066OibalsWhrEgW_gXcWOBomrSd7iTDu_C7nN_py2koxOGtUYEakvU2YfafVmF-SqXkLx4jwKx6za1coSiS_Kd4NQZcmmOJW0A2yRcA8zRUvRQlzPSB9fs-9DERAtyRMCLOHt1DOV-zKoJztuxbyRLSuSMiv-kipTupjxJ98CDOSvIv2qh/s320/1000001083.png",
     "backImage": "https://your-back-image-url.com/back.png",
     "hp": 88,
@@ -10,6 +9,4 @@
     "cash": 420,
     "bio": "Streetwise hustler from the West Block. Knows every alley and deal.",
     "perks": ["Quick Hands", "Undercover Connect", "Street Smarts"]
-  };
-  renderCard(defaultCard);
-</script>
+
