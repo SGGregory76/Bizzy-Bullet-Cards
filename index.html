@@ -1,164 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bizzy Bullets Card Renderer</title>
-  <link href="https://fonts.googleapis.com/css2?family=Staatliches&display=swap" rel="stylesheet">
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body {
-      height: 100%;
-      width: 100%;
-      background: #000;
-      font-family: 'Staatliches', sans-serif;
-      overflow-x: hidden;
-      position: relative;
-      z-index: 0;
-    }
-    .overlay-wrapper {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 10000;
-      width: 100%;
-      max-width: 480px;
-      padding: 1rem;
-    }
-    .card-container {
-      perspective: 1000px;
-      width: 100%;
-    }
-    .card-inner {
-      position: relative;
-      width: 100%;
-      transition: transform 0.6s;
-      transform-style: preserve-3d;
-    }
-    .flipped {
-      transform: rotateY(180deg);
-    }
-    .card-face {
-      position: absolute;
-      width: 100%;
-      backface-visibility: hidden;
-    }
-    .card-face img {
-      width: 100%;
-      height: auto;
-      object-fit: cover;
-      display: block;
-      border-radius: 8px;
-      max-height: 680px;
-    }
-    .card-back {
-      transform: rotateY(180deg);
-    }
-    .stat-overlay {
-      position: absolute;
-      bottom: 12px;
-      width: 100%;
-      background: rgba(0, 0, 0, 0.3);
-      color: #999;
-      font-size: 0.9em;
-      padding: 0.5em 1em;
-      font-family: monospace;
-      text-align: left;
-    }
-    .stat-line {
-      display: flex;
-      justify-content: space-between;
-      margin: 2px 0;
-    }
-    .copyright {
-      position: absolute;
-      bottom: 5px;
-      right: 10px;
-      font-size: 0.6em;
-      color: #999;
-    }
-    .rarity-tag {
-      position: absolute;
-      top: 8px;
-      left: 10px;
-      font-size: 0.85em;
-      padding: 4px 8px;
-      border-radius: 4px;
-      background: rgba(0, 0, 0, 0.3);
-      color: #fff;
-      font-weight: bold;
-    }
-    .rarity-rare { background: rgba(41, 128, 185, 0.5); }
-    .rarity-epic { background: rgba(142, 68, 173, 0.5); }
-    .rarity-legendary { background: rgba(243, 156, 18, 0.5); }
-    .rarity-common { background: rgba(85, 85, 85, 0.5); }
-    #flipBtn {
-      margin-top: 16px;
-      padding: 8px 16px;
-      background: #333;
-      color: #ccc;
-      border: none;
-      border-radius: 4px;
-      font-family: 'Staatliches', sans-serif;
-      cursor: pointer;
-      width: 100%;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bizzy Bullet Card Renderer</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="overlay-wrapper">
-    <div class="card-container">
-      <div class="card-inner" id="cardInner">
-        <div class="card-face">
-          <div class="rarity-tag" id="rarityTag"></div>
-          <img id="cardImage" src="" alt="Card Front" />
-          <div class="stat-overlay" id="cardStats"></div>
-          <div class="copyright">© Bizzy Bullets</div>
-        </div>
-        <div class="card-face card-back">
-          <img id="cardBackImage" src="" alt="Card Back" />
-          <div class="copyright">© Bizzy Bullets</div>
-        </div>
-      </div>
-    </div>
-    <button id="flipBtn">Flip Card</button>
+  <div id="renderer-container">
+    <h1>Bizzy Bullet Card Viewer</h1>
+    <input type="file" id="uploadJson" accept=".json">
+    <button id="downloadBtn">Download JSON</button>
+    <select id="themeSelector">
+      <option value="default">Select Theme</option>
+      <option value="grit">Urban Grit</option>
+      <option value="neon">Neon Heat</option>
+      <option value="graffiti">Graffiti Fade</option>
+    </select>
+    <div id="cardDisplay" class="card-container"></div>
   </div>
-
-  <script>
-    const cardData = {
-      name: "Jay 'Stacks' Moreno",
-      type: "Dealer",
-      rarity: "epic",
-      image: "https://your-image-url.com/front.jpg",
-      back: "https://your-image-url.com/back.jpg",
-      hp: 75,
-      atk: 60,
-      def: 45,
-      heat: 20,
-      rep: 40,
-      cash: 1200,
-      loyalty: 30,
-      inventory: ["Weed", "Oxytocin", "Switchblade"]
-    };
-
-    document.getElementById("cardImage").src = cardData.image;
-    document.getElementById("cardBackImage").src = cardData.back;
-    document.getElementById("rarityTag").innerText = cardData.rarity.toUpperCase();
-    document.getElementById("rarityTag").classList.add(`rarity-${cardData.rarity.toLowerCase()}`);
-
-    document.getElementById("cardStats").innerHTML = `
-      <div class='stat-line'><strong>${cardData.name}</strong> <span>(${cardData.type})</span></div>
-      <div class='stat-line'>☠️ HP: ${cardData.hp}    ⚔️ ATK: ${cardData.atk}</div>
-      <div class='stat-line'>💢 DEF: ${cardData.def}    🔥 HEAT: ${cardData.heat}</div>
-      <div class='stat-line'>🧠 REP: ${cardData.rep}    💵 CASH: $${cardData.cash}</div>
-      <div class='stat-line'>🫂 LOYALTY: ${cardData.loyalty}</div>
-      <div class='stat-line'>🎒 ${cardData.inventory.join(', ')}</div>
-    `;
-
-    document.getElementById("flipBtn").addEventListener("click", () => {
-      document.getElementById("cardInner").classList.toggle("flipped");
-    });
-  </script>
+  <script src="renderer.js"></script>
 </body>
 </html>
