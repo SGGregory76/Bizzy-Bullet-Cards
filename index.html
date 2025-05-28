@@ -1,80 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Bizzy Bullets Card Builder</title>
-  <link rel="stylesheet" href="card-style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bizzy Bullets Card Renderer</title>
   <link href="https://fonts.googleapis.com/css2?family=Staatliches&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      height: 100%;
+      width: 100%;
+      background: #000;
+      font-family: 'Staatliches', sans-serif;
+      overflow-x: hidden;
+      position: relative;
+      z-index: 0;
+    }
+    .overlay-wrapper {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10000;
+      width: 100%;
+      max-width: 480px;
+      padding: 1rem;
+    }
+    .card-container {
+      perspective: 1000px;
+      width: 100%;
+    }
+    .card-inner {
+      position: relative;
+      width: 100%;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+    }
+    .flipped {
+      transform: rotateY(180deg);
+    }
+    .card-face {
+      position: absolute;
+      width: 100%;
+      backface-visibility: hidden;
+    }
+    .card-face img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+      display: block;
+      border-radius: 8px;
+      max-height: 680px;
+    }
+    .card-back {
+      transform: rotateY(180deg);
+    }
+    .stat-overlay {
+      position: absolute;
+      bottom: 12px;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      color: #999;
+      font-size: 0.9em;
+      padding: 0.5em 1em;
+      font-family: monospace;
+      text-align: left;
+    }
+    .stat-line {
+      display: flex;
+      justify-content: space-between;
+      margin: 2px 0;
+    }
+    .copyright {
+      position: absolute;
+      bottom: 5px;
+      right: 10px;
+      font-size: 0.6em;
+      color: #999;
+    }
+    .rarity-tag {
+      position: absolute;
+      top: 8px;
+      left: 10px;
+      font-size: 0.85em;
+      padding: 4px 8px;
+      border-radius: 4px;
+      background: rgba(0, 0, 0, 0.3);
+      color: #fff;
+      font-weight: bold;
+    }
+    .rarity-rare { background: rgba(41, 128, 185, 0.5); }
+    .rarity-epic { background: rgba(142, 68, 173, 0.5); }
+    .rarity-legendary { background: rgba(243, 156, 18, 0.5); }
+    .rarity-common { background: rgba(85, 85, 85, 0.5); }
+    #flipBtn {
+      margin-top: 16px;
+      padding: 8px 16px;
+      background: #333;
+      color: #ccc;
+      border: none;
+      border-radius: 4px;
+      font-family: 'Staatliches', sans-serif;
+      cursor: pointer;
+      width: 100%;
+    }
+  </style>
 </head>
 <body>
-  <h1>🎴 Bizzy Bullets Card Builder</h1>
-
-  <textarea id="jsonInput" rows="10" placeholder="Paste your card JSON here..."></textarea>
-  <button onclick="renderCard()">Render Card</button>
-
-  <div style="margin: 1em 0;">
-    <label><b>Upload Front Image:</b> <input type="file" id="frontUploader" /></label>
-    <label><b>Upload Back Image:</b> <input type="file" id="backUploader" /></label>
-  </div>
-
-  <div id="cardPreview">
-    <div class="rarity-tag" id="rarityTag"></div>
-    <img id="cardImage" src="" alt="Card image" />
-    <div class="stat-overlay" id="cardStats"></div>
-    <small class="copyright">© Bizzy Bullets</small>
+  <div class="overlay-wrapper">
+    <div class="card-container">
+      <div class="card-inner" id="cardInner">
+        <div class="card-face">
+          <div class="rarity-tag" id="rarityTag"></div>
+          <img id="cardImage" src="" alt="Card Front" />
+          <div class="stat-overlay" id="cardStats"></div>
+          <div class="copyright">© Bizzy Bullets</div>
+        </div>
+        <div class="card-face card-back">
+          <img id="cardBackImage" src="" alt="Card Back" />
+          <div class="copyright">© Bizzy Bullets</div>
+        </div>
+      </div>
+    </div>
+    <button id="flipBtn">Flip Card</button>
   </div>
 
   <script>
-    let cardData = null;
-    let showingBack = false;
+    const cardData = {
+      name: "Jay 'Stacks' Moreno",
+      type: "Dealer",
+      rarity: "epic",
+      image: "https://your-image-url.com/front.jpg",
+      back: "https://your-image-url.com/back.jpg",
+      hp: 75,
+      atk: 60,
+      def: 45,
+      heat: 20,
+      rep: 40,
+      cash: 1200,
+      loyalty: 30,
+      inventory: ["Weed", "Oxytocin", "Switchblade"]
+    };
 
-    document.getElementById('frontUploader').addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(evt) {
-          document.getElementById('jsonInput').value = document.getElementById('jsonInput').value.replace(/"image":\s*"[^"]*"/, `"image": "${evt.target.result}"`);
-        }
-        reader.readAsDataURL(file);
-      }
+    document.getElementById("cardImage").src = cardData.image;
+    document.getElementById("cardBackImage").src = cardData.back;
+    document.getElementById("rarityTag").innerText = cardData.rarity.toUpperCase();
+    document.getElementById("rarityTag").classList.add(`rarity-${cardData.rarity.toLowerCase()}`);
+
+    document.getElementById("cardStats").innerHTML = `
+      <div class='stat-line'><strong>${cardData.name}</strong> <span>(${cardData.type})</span></div>
+      <div class='stat-line'>☠️ HP: ${cardData.hp}    ⚔️ ATK: ${cardData.atk}</div>
+      <div class='stat-line'>💢 DEF: ${cardData.def}    🔥 HEAT: ${cardData.heat}</div>
+      <div class='stat-line'>🧠 REP: ${cardData.rep}    💵 CASH: $${cardData.cash}</div>
+      <div class='stat-line'>🫂 LOYALTY: ${cardData.loyalty}</div>
+      <div class='stat-line'>🎒 ${cardData.inventory.join(', ')}</div>
+    `;
+
+    document.getElementById("flipBtn").addEventListener("click", () => {
+      document.getElementById("cardInner").classList.toggle("flipped");
     });
-
-    document.getElementById('backUploader').addEventListener('change', function(e) {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(evt) {
-          document.getElementById('jsonInput').value = document.getElementById('jsonInput').value.replace(/"back":\s*"[^"]*"/, `"back": "${evt.target.result}"`);
-        }
-        reader.readAsDataURL(file);
-      }
-    });
-
-    function renderCard() {
-      try {
-        cardData = JSON.parse(document.getElementById("jsonInput").value);
-        showingBack = false;
-
-        document.getElementById("cardPreview").style.display = "block";
-        document.getElementById("cardImage").src = cardData.image;
-
-        const statsHTML = `
-          <div><b>${cardData.name}</b> (${cardData.type})</div>
-          ❤️ HP: ${cardData.hp}  ⚔️ ATK: ${cardData.atk}  🛡️ DEF: ${cardData.def}<br/>
-          🔥 HEAT: ${cardData.heat}  🤝 REP: ${cardData.rep}  💵 CASH: $${cardData.cash}<br/>
-          🎯 LOYALTY: ${cardData.loyalty || 0}<br/>
-          🧳 INVENTORY: ${cardData.inventory ? cardData.inventory.join(", ") : "none"}
-        `;
-
-        document.getElementById("cardStats").innerHTML = statsHTML;
-        document.getElementById("rarityTag").innerText = cardData.rarity?.toUpperCase() || "COMMON";
-        document.getElementById("rarityTag").className = `rarity-tag rarity-${cardData.rarity?.toLowerCase() || 'common'}`;
-
-      } catch (e) {
-        alert("Invalid JSON");
-      }
-    }
   </script>
 </body>
 </html>
