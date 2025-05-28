@@ -1,0 +1,99 @@
+/* card-style.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Staatliches&display=swap');
+
+body {
+  background: #111;
+  color: #fff;
+  font-family: 'Staatliches', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+textarea, select, button {
+  font-size: 1em;
+  border-radius: 6px;
+  font-family: 'Staatliches', sans-serif;
+}
+
+h1, h2, h3, p, span, small {
+  font-family: 'Staatliches', sans-serif;
+}
+
+h1 {
+  font-size: 1.6em;
+  margin-top: 1em;
+}
+
+.card-theme {
+  border-radius: 10px;
+  padding: 0;
+  background-size: cover;
+  background-position: center;
+  transition: all 0.3s ease-in-out;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Default Theme - Urban Grit */
+.theme-urban {
+  background: #000;
+  border: none;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+}
+
+/* Placeholder for more themes */
+.theme-neon {}
+.theme-chrome {}
+.theme-classic {}
+
+img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0;
+}
+
+#cardPreview {
+  padding: 0;
+  margin-top: 1.5em;
+  display: none;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  background: transparent;
+}
+
+#cardPreview small {
+  font-size: 0.65em;
+  opacity: 0.6;
+  position: absolute;
+  right: 10px;
+  bottom: 8px;
+  color: #fff;
+  text-shadow: 1px 1px 2px #000;
+}
+
+button {
+  background: #444;
+  color: #fff;
+  padding: 0.6em 1em;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #666;
+}
+
+textarea {
+  background: #222;
+  color: #fff;
+  border: 1px solid #555;
+  padding: 1em;
+  width: 100%;
+  max-width: 480px;
+  margin: auto;
+  display: block;
+}
